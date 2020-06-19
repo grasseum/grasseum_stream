@@ -1,23 +1,23 @@
 {
-  "name": "grasseum_stream",
+  "name": "grasseum_api",
   "version": "1.0.0",
-  "description": "Library for Grasseum stream",
+  "description": "Library for Grasseum api",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "Streaming build library"
+    "API build library"
   ],
   "dependencies": {},
   "author": "Pein Freccs",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/grasseum/grasseum_stream.git"
+    "url": "git+https://github.com/grasseum/grasseum_api.git"
   },
   "bugs": {
-    "url": "https://github.com/grasseum/grasseum_stream/issues"
+    "url": "https://github.com/grasseum/grasseum_api/issues"
   },
-  "homepage": "https://github.com/grasseum/grasseum_stream#readme"
+  "homepage": "https://github.com/grasseum/grasseum_api#readme"
 }
