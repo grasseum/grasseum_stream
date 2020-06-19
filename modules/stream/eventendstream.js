@@ -1,19 +1,15 @@
- 
-
-var fs = require("fs")
-  
+var grasseum_util =require("grasseum_util")  
+var trasform_stream = grasseum_util.stream().trasform;
 
 
-var Transform = require('stream').Transform,
-    util = require('util');
 
 var TransformFilterStream = function() {
-  Transform.call(this, {objectMode: true});
+  
+
 };
 
-util.inherits(TransformFilterStream, Transform);
 
-TransformFilterStream.prototype._destroy = function (chunk, enc, cb) {
+TransformFilterStream.prototype.destroy = function (chunk, enc, cb) {
   // this.cork();
  
   
@@ -22,15 +18,25 @@ TransformFilterStream.prototype._destroy = function (chunk, enc, cb) {
 
 
 
-TransformFilterStream.prototype._transform = function(chunk, encoding, callback) {
+TransformFilterStream.prototype.transform = function(action) {
    
-  this.emit("finish");
-  callback(null,chunk);
+  
+  action.callback(null,action.data);
+
+  if(action.data.isLastPath){
+    action.emit("grasseum_completed");
+  }
+  return
 };
 
 
  ;
-module.exports = TransformFilterStream;
+module.exports = function(){
+  var src_cls = new TransformFilterStream(); 
+  return trasform_stream(src_cls)
+}
+
+ 
 
 
 

@@ -1,29 +1,64 @@
 var compt = require("compts");
 
-//const readStream = require("grasseum_stream/stream/readStream");
+ 
 var fs = require("fs");
 
-let list_load = {};
-list_load['stream']={};
-list_load['execute']=[];
+
 let modules = require("./modules");
-let execute = require("./execute");
+let execute = require("./execute/stream");
+let config = require("./execute/config");
+let execute_watch = require("./execute/watch");
 
-exports.module_stream = function(){
-    return modules(list_load);
+
+let list_load = config.stream_details();
+var events = require('events');
+var eventEmitter = new events.EventEmitter(); 
+eventEmitter.setMaxListeners(1000);
+
+
+exports.module_stream = function(action){
+    return modules(list_load,action ,eventEmitter);
 }
 
-exports.module_execute = function(){
-    return execute.allocate(list_load)
+exports.module_execute = function(action){
+    return execute.allocate(list_load,action);
 }
 
-exports.prepare_execute = function(){
-    if(list_load['execute'].length > 0){
-        var arg_exe = list_load['execute'][0];
+exports.module_execute_thread = function(action){
+    return execute_watch.allocate_thread(list_load,action);
+}
+exports.execute_pipe_name_only = function( name,action ){
+    var name_split = compt._.to_array(name.split(","));
+    var exists_cls = [];
+   
+   
+    list_load['execute']=[];
+   
+    var prep_list = execute.allocate(list_load,action);
+   
+    compt._.each(name_split,function(k,v){
+        if( compt._.indexOf(exists_cls,v)==-1 ){
+           
+        
+         prep_list['series'](v);
+        }
+        
 
-        execute.prepare_execute(list_load ,exports.prepare_execute, arg_exe['type'], arg_exe['module'])
-    }else{
-        console.log("complete executing the whole project");
-    }
+    });
+
   
+}
+exports.prepare_thread_execution = function(){
+ 
+
+    execute_watch.prepare_thread_execute(list_load ,eventEmitter);
+}
+exports.prepare_execute = function(load_action){
+
+   execute.prepare_init_execute( load_action,list_load ,eventEmitter);
+}
+
+exports.getListLoad = function(){
+    return list_load;
+
 }

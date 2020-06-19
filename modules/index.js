@@ -5,7 +5,7 @@ const downloadfile = require("./stream/downloadfile");
 const destfilestream = require("./stream/destfilestream");
 var fs = require("fs");
 
-module.exports = function(final_glb){
+module.exports = function(final_glb,action,event){
    return {
 
                      
@@ -16,19 +16,26 @@ module.exports = function(final_glb){
       final_glb['stream'][name]["load"] = func;
        },
 
+       require:function(name){
+        
+         if( typeof(final_glb['require'][name]) == "undefined" ){
+            final_glb['require'][name] = require(name);
+         } 
+         return final_glb['require'][name];
+       },
        src:function(file){
           
-           var read_stream =  new srcfilestream(file);
-           return   read_stream//.pipe(new readStream1())
+           var read_stream =  new srcfilestream(file,action,event);
+           return   read_stream;
 
            },
-        download:function(file){
-              return  new downloadfile(file);
-            //   return  new duplexStream();
+        download:function(file,config){
+              return  new downloadfile(file,config,action,event);
+      
                },     
        dest:function(file){
-          return  new destfilestream(file);
-        //   return  new duplexStream();
+          return  new destfilestream(file,action,event);
+      
            },    
         watch:function(name){ 
            //testropt.watchModule(name)

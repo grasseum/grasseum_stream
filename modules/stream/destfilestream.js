@@ -1,12 +1,13 @@
-Duplex = require('stream').Duplex,
-util = require('util');
-
-
 var fs = require("fs");
 var path = require("path");
+var grasseum_util =require("grasseum_util");
+var duplex_stream = grasseum_util.stream().duplex; 
 
-var duplexStreamReadonly = function( location ) {
-//Readable.call(this, {objectMode: true});
+var grasseum_directory =require("grasseum_directory");
+var write_file = grasseum_directory.write();
+var directory_cmd = grasseum_directory.directory();
+var duplexStreamReadonly = function( location ,action) {
+
 
 
 this.data = "";
@@ -15,51 +16,36 @@ this.boll1 = true;
 this.count = 0;
 this.refchunk = null;
 this.location = location;
-//this.flags = flags;
-
-
-Duplex.call(this, {readableObjectMode: true,writableObjectMode: true,objectMode: true});
+this.action = action;
  
 };
 
-util.inherits(duplexStreamReadonly, Duplex);
 
-
-//duplexStreamReadonly.prototype._final = function(callback) {
-//  console.log("final")
-//  callback();
-//}
-duplexStreamReadonly.prototype._write = function(chunk, encoding, callback) {
-  //
+duplexStreamReadonly.prototype.write = function(action) {
+  
   var main = this;
 
- // if(chunk["is_valid"]){
-    var to_data_string =  chunk//.toString()
-    //console.log(chunk,":wto_data_string+1")
-  //this.push(chunk)
-  //main.emit("finish");
-    
-  //main.emit("resume");
-   
-    var data = fs.createWriteStream( path.join(this.location,chunk['filename']) );
-    data.write( chunk.contents);
-    //data.on("finish",function(){
-    //  console.log("finish . . .");
-    this.push(chunk);
-    this.refchunk = chunk;
-      callback(null,chunk);
-   // return  
-    //});
-    
-   
-  //}
+ 
+    var to_data_string =  action.data//.toString()
+
+
+    directory_cmd.createFolderRecursivelyIfNotExist(path.join(this.location, action.data.basename))
+
+
+    write_file.writeStream(path.join(this.location, action.data.basename),
+    action.data.contents
+    );
+    action.push(action.data);
+    this.refchunk = action.data;
+    action.callback(null,action.data);
+ 
   
     
   };
-  duplexStreamReadonly.prototype._read = function(chunk, encoding) {
+  duplexStreamReadonly.prototype.read = function(action) {
     var main = this;
-    var data = chunk//.toString();
-      var to_data_string =  chunk 
+    var data =  action.data//.toString();
+      var to_data_string =  action.data; 
       if( this.refchunk != null){
         //console.log(this.refchunk,":rto_data_string",encoding)
        // this.push(this.refchunk);
@@ -71,4 +57,9 @@ duplexStreamReadonly.prototype._write = function(chunk, encoding, callback) {
     //  return this.push(null);
   };
 
-module.exports = function(glb){ return new duplexStreamReadonly(glb); }
+module.exports = function(glb,action,event){ 
+  
+  var src_cls = new duplexStreamReadonly(glb,action); 
+  return duplex_stream(event,src_cls)
+
+}

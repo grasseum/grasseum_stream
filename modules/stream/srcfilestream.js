@@ -1,72 +1,90 @@
+var grasseum_directory =require("grasseum_directory");
+var read_file = grasseum_directory.read();
+var directory_cmd = grasseum_directory.directory();
+var grasseum_util =require("grasseum_util")
+var compt = require("compts");
+var read_stream = grasseum_util.stream().read; 
+var SrcStream = function( files ,action) {
+   
+  
+  	this.files = compt._.to_array(files);
+	this.list_file = [];
+	this.fileCountReference = 0;
+	this.action = action; 
+	this.CheckFileCount();
 
-    Readable = require('stream').Readable,
-    util = require('util');
-
-
-var fs = require("fs")
- var grasseum_directory =require("grasseum_directory");
-
- var grasseum_core =require("grasseum_core")
-var ReadStream = function( files) {
-  //Readable.call(this, {objectMode: true});
-  Readable.call(this, {objectMode: true});
-  this.files = files;
-this.list_file = [];
-
+ 
 };
 
-util.inherits(ReadStream, Readable);
 
-ReadStream.prototype._read = function(chunk, encoding) {
-     var main = this;
-	 this.on("resume",function(){
-        //var data = chunk//.toString();
-        console.log("resume . . .");
-        // this.destroy()    
-     // }
-    });
+SrcStream.prototype.CheckFileCount = function() {
+	var main = this;
+	directory_cmd.readFileInDir( this.files, function(val){
+		main.fileCountReference++;
+	});
 
-			
-		  grasseum_directory.readFileInDir( this.files, function(val){
-      			//	main.pause();
- if( main.list_file.indexOf(val.path) ==-1  ){
-		      //  console.log(val,":val",main.list_file.indexOf(val.path));
-				var data_readstream = fs.createReadStream(val.path);
-				var list_content = [];
-				data_readstream.on('data', function (chunk) {
-					list_content.push(chunk);
-				});
-				data_readstream.on("end",function(){
-					main.push(grasseum_core.readStream({
-						contents:list_content.join(),
-						path:val.path,
-						filename:val.filename
-					}));//{"filesrc":val,"content":list_content.join(""),"is_valid":false});
-				});
+}
 
-			  
-			  
-		      }
-			 // main.destroy();
-			 //main.emit("finish");
-		      if( main.list_file.indexOf(val.path)>=0  ){
-				
-		//	console.log("exist");					
-	//		main.push({"list_raw_file":list_raw_file});
-		      //  main.destroy();
-		      }
-		      main.list_file.push(val.path);
-
-		  });
  
+SrcStream.prototype.read = function(action) {
+     var main = this;
+	
+
+		 
+	 directory_cmd.readFileInDir( this.files, function(val){
+      	
+ 			if( main.list_file.indexOf(val.path) ==-1  ){
+		     
+			
+				read_file.readStream(val.path,function( data ){		
+						
+						if(compt._.has(data,"complete_data")){
+							var isFirstRaw = main.list_file.length == 0;
+							var isLastRaw = main.list_file.length>=(main.fileCountReference-1);
+							main.list_file.push(val.path);
+							var cl = grasseum_util.readStream({
+								contents:new Buffer(data["complete_data"]),//list_content.join().toString(),
+								path:val.path,
+								filename:val.filename,
+								//fileOrder:raw_order,
+								isFirstPath:isFirstRaw,
+								isLastPath:isLastRaw,
+								cwd:main.action.argv.cwd,
+								base:main.action.argv.cwd
+							})
+					
+						
+							action.push(cl);
+					
+							if(main.list_file.length >= main.fileCountReference){
+								action.destroy();
+							}
+						}
+
+					
+					
+					
+					
+					
+				});
+
+			  
+			  
+		      }
+		 
+		       
+			  
+		});
     
 };
 
 
-//
-module.exports= ReadStream;
-//exports.read = ReadStream;
-//exports.tranform = TransformFilterStream;
+
+module.exports=function(files ,action,event){
+	var src_cls = new SrcStream(files ,action);
+	return read_stream(event,src_cls)
+} 
+
 
 
 
