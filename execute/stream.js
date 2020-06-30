@@ -18,15 +18,16 @@ exports.prep_method = function(final_glb,load_action){
                "module":name
             })
             return this;
-          },
+          },//load_action,list_load , eventEmitter
           run:function(eventEmitter,clbk, types,name){
-        
+           
             _call_stream_module(eventEmitter,final_glb['stream'],name,function(){
                load_action.shift();
-                        clbk(load_action);
+                        clbk(load_action,final_glb,eventEmitter);
                      
                      
             });
+            
           },
       },
       parallel:{
@@ -54,7 +55,7 @@ exports.prep_method = function(final_glb,load_action){
                   cntr_exec++;
                   if(cntr_exec>=len_exec){
                      load_action.shift();
-                     clbk(load_action);
+                     clbk(load_action,final_glb,eventEmitter);
                   }
             });
          
@@ -132,8 +133,8 @@ exports.prepare_execute = function(load_action,final_glb,eventEmitter,clbk, type
 }
 
 exports.prepare_init_execute = function(load_action,list_load , eventEmitter){
-   if(load_action.length > 0){
-
+   if(load_action.length > 0){   
+         
        var arg_exe = load_action[0];
        exports.prepare_execute(load_action,list_load ,eventEmitter,exports.prepare_init_execute, arg_exe['type'], arg_exe['module'])
    }else{
