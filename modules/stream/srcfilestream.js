@@ -43,10 +43,10 @@ SrcStream.prototype.read = function(action) {
 							var isLastRaw = main.list_file.length>=(main.fileCountReference-1);
 							main.list_file.push(val.path);
 							var cl = grasseum_util.readStream({
-								contents:new Buffer(data["complete_data"]),//list_content.join().toString(),
+								contents:new Buffer(data["complete_data"]),
 								path:val.path,
 								filename:val.filename,
-								//fileOrder:raw_order,
+				
 								isFirstPath:isFirstRaw,
 								isLastPath:isLastRaw,
 								cwd:main.action.argv.cwd,

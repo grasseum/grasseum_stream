@@ -18,7 +18,7 @@ exports.prep_method = function(final_glb,load_action){
                "module":name
             })
             return this;
-          },//load_action,list_load , eventEmitter
+          },
           run:function(eventEmitter,clbk, types,name){
            
             _call_stream_module(eventEmitter,final_glb['stream'],name,function(){
@@ -138,7 +138,7 @@ exports.prepare_init_execute = function(load_action,list_load , eventEmitter){
        var arg_exe = load_action[0];
        exports.prepare_execute(load_action,list_load ,eventEmitter,exports.prepare_init_execute, arg_exe['type'], arg_exe['module'])
    }else{
-       console.log("complete executing the whole project");
+       console.log("Complete executing the whole project");
    }
  
 }

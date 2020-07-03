@@ -10,7 +10,7 @@ var TransformFilterStream = function() {
 
 
 TransformFilterStream.prototype.destroy = function (chunk, enc, cb) {
-  // this.cork();
+
  
   
  

@@ -1,4 +1,3 @@
-var fs = require("fs");
 var path = require("path");
 var grasseum_util =require("grasseum_util");
 var duplex_stream = grasseum_util.stream().duplex; 
@@ -26,8 +25,7 @@ duplexStreamReadonly.prototype.write = function(action) {
   var main = this;
 
  
-    var to_data_string =  action.data//.toString()
-
+    
 
     directory_cmd.createFolderRecursivelyIfNotExist(path.join(this.location, action.data.basename))
 
@@ -44,17 +42,16 @@ duplexStreamReadonly.prototype.write = function(action) {
   };
   duplexStreamReadonly.prototype.read = function(action) {
     var main = this;
-    var data =  action.data//.toString();
+    var data =  action.data
       var to_data_string =  action.data; 
       if( this.refchunk != null){
-        //console.log(this.refchunk,":rto_data_string",encoding)
-       // this.push(this.refchunk);
+      
         
       }
       
     
       
-    //  return this.push(null);
+    
   };
 
 module.exports = function(glb,action,event){ 
