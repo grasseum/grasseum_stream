@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 var compt = require("compts");
 
  
@@ -62,34 +61,4 @@ exports.prepare_execute = function(load_action){
 exports.getListLoad = function(){
     return list_load;
 
-=======
-const http_inter = require("./http");
-const http = require('http');
-class Api{
-    constuctor(){
-        this.log_data_src = null;
-        this.require_action_api = [];
-        this.require_config =  {};
-    }
-
-    set_log_data(data){
-        this.log_data_src = data;
-    }
-    set_require_action_api(data){
-        this.require_action_api = data;
-    }
-    set_require_config(data){
-        this.require_config = data;
-    }
-    run_http(){
-
-    }
-}
-
-
-
-
-module.exports = function(){
-    return new Api()
->>>>>>> 6ecc56a2e48963810614e117740f0578488c865d
 }
