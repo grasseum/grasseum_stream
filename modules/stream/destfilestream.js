@@ -3,7 +3,8 @@ var grasseum_util =require("grasseum_util");
 var duplex_stream = grasseum_util.stream().duplex; 
 
 var grasseum_directory =require("grasseum_directory");
-var write_file = grasseum_directory.write();
+var files =require("grasseum_files");
+var write_file = files.write();
 var directory_cmd = grasseum_directory.directory();
 var duplexStreamReadonly = function( location ,action) {
 
