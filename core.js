@@ -1,10 +1,10 @@
 
 class Core{
     constuctor(){
-
+        
     }
-
-  
+    
+    
 }
 
 
@@ -12,4 +12,4 @@ class Core{
 
 module.exports = function(){
     return new Core()
-}
+}                                                                                                                                       
