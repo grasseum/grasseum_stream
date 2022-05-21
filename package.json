@@ -4,7 +4,7 @@
   "description": "Library for Grasseum stream",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "es_linter": "eslint execute/*.js  modules/*.js modules/*/*.js *.js --fix"
   },
   "keywords": [
     "Streaming build library"

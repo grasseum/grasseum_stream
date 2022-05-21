@@ -1,15 +1,6 @@
 
-class Core{
-    constuctor(){
-        
-    }
-    
-    
-}
 
+module.exports = function () {
+// Do nothing.
 
-
-
-module.exports = function(){
-    return new Core()
-}                                                                                                                                       
+};
